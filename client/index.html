@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>To Do List</title>
+  <style>
+	[v-cloak] {
+	   display: none;
+	}
+ </style>
+
+</head>
+
+<body>
+
+	<div id="todo-app" v-cloak>
+		<div class="jumbotron">
+			<center>
+				<h1>To Do List</h1>      
+				<p>Add thing that you need to to</p>
+			</center>
+		</div>
+
+		<!-- Projects -->
+		<div v-show="!projectSelected">
+			<div class="container">
+				<!-- Add a Project -->
+				<form class="form-inline">
+					<div class="form-group">
+					<label>Project</label>
+					<input type="text" v-model="addingProject" class="form-control" placeholder="Project Name" name="addingProject">
+					<button type="submit" class="btn btn-default" v-on:click="addProject">Create</button>
+					</div>
+				</form>
+			</div>
+
+			<br>
+
+			<!-- <project-component v-bind:projects="projects" ></project-component> -->
+			<!-- List all Projects -->
+			<div class="container">
+				<table class="table table-hover">
+					<th>Projects</th>
+					<tr class="active" v-for="project in projects">
+						<td>
+							<p v-bind="project">{{project.name}}</p>
+						</td>
+						<td>
+							<button type="submit" v-on:click="getProjectInfo(project)">Select Project</button>
+						</td>
+					</tr>
+				</table>
+			</div>
+
+		</div>
+
+
+		<!-- Tasks -->
+		<div v-show="projectSelected">
+			<!-- Add a Task -->
+			<div class="container">
+				<form class="form-inline">
+					<div class="form-group">
+					<label>Tasks</label>
+					<input v-bind="addingTask" type="text" class="form-control" placeholder="To Do">
+					</div>
+				<button v-on:click="addTask()" type="submit" class="btn btn-default">Add</button>
+				</form>
+			</div>
+
+			<br>
+
+			<!-- List All Tasks -->
+			<div class="container">
+				<table class="table table-hover">
+					<th style="width:200px">Status</th>
+					<th>ToDo</th>
+					<tr v-for="task in currentProject.list" class="active">
+						<td>
+							<button v-show="task.status" v-on:click="toggle(task)" class="btn btn-info">Done</button>
+							<button v-show="!task.status" v-on:click="toggle(task)" class="btn btn-danger">Not Done</button>
+						</td>
+						<td>{{task.value}}</td>
+					</tr>
+				</table>
+			</div>
+
+			<!-- Remove all Tasks -->
+			<div class="container">
+				<button  v-on:click="removeAll" class="btn btn-danger pull-right">Remove All</button>
+				&nbsp;&nbsp;&nbsp;
+				<button type="submit" v-on:click="backToHome()" class="btn btn-success pull-right">Back to Home</button>
+			</div>
+		</div>
+
+
+	</div>
+	<!-- <script type="text/javascript" src="https://unpkg.com/vue@2.5.15/dist/vue.min.js"></script> -->
+	<script type="text/javascript" src="https://unpkg.com/vue"></script>
+	<!-- <script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script> -->
+	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
+	<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+	<script type="text/javascript" src="https://unpkg.com/socket.io-client@2.1.0/dist/socket.io.js"></script>
+   	<script type="text/javascript" src="app.js"></script>
+</body>
+
+</html>
