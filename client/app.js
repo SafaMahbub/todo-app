@@ -17,7 +17,7 @@ const projectComponent = {
 }
 
 const socket = io()
-let app = new Vue({
+const app = new Vue({
     el: '#todo-app',
     data: {
         loggedIn: false,
@@ -26,27 +26,21 @@ let app = new Vue({
         user: {},
         users: [],
         project: {},
-        projects: [{name: 'Test Project', list: [{status:false, value: "Task 1"}, {status:false, value: "Task 2"}, {status:false, value: "Task 3"} ] }, {name: 'Test Project 2', list: [{status:false, value: "Task 4"}] }],
+        projects: [],//[{name: 'Test Project', list: [{status:false, value: "Task 1"}, {status:false, value: "Task 2"}, {status:false, value: "Task 3"} ] }, {name: 'Test Project 2', list: [{status:false, value: "Task 4"}] }],
         addingProject: '',
         addingTask: '',
-        currentProject: {name: 'Test Project', list: [{status:false, value: "Hello"}] },
+        currentProject: {}, //{name: 'Test Project', list: [{status:false, value: "Hello"}] },
         error: false
     },
     methods: {
         addProject: function() {
-
-            // let viewModel = this
-
-            if(!addingProject) return
-            socket.emit('add-project', {name: this.addingProject, list: [{status:false, value: ""}]})
-
+            if(!this.addingProject) return
+            socket.emit('add-project', {name: this.addingProject, list: [] })
         },
 
-        addTask: function(taskName){
-            let viewModel = this
-            let add = {status: false, value: taskName}
-
-            viewModel.currentProject.list.push(add)
+        addTask: function() {
+            if(!this.addingTask) return
+            socket.emit('add-task', {projectName: this.currentProject, task: {status:false, value: this.addingTask }})
         },
 
         getProjectInfo: function(project) {
@@ -99,8 +93,25 @@ let app = new Vue({
     }
 })
 
-socket.on('adding-project', content => {
+// socket.on('add-project', content => {
+//     // clear the message after success send
+//     app.addingProject = ''
+//     app.projects.push(content)
+// })
+
+socket.on('refresh-projects', projects => {
+    app.projects = projects
+})
+
+socket.on('successful-project', content => {
     // clear the message after success send
     app.addingProject = ''
     app.projects.push(content)
+})
+
+socket.on('successful-task', content => {
+    // clear the message after success send
+    app.addingTask = ''
+
+    app.projects[content.projectName].list.push(content.task)
 })
