@@ -36,7 +36,7 @@ const app = new Vue({
     methods: {
         addProject: function() {
             if(!this.addingProject) return
-            socket.emit('add-project', {name: this.addingProject, list: [] })
+            axios.post('/add-project', {name: this.addingProject, list: [] })
         },
 
         addTask: function() {
@@ -87,12 +87,14 @@ socket.on('refresh-projects', projects => {
     app.projects = projects
 })
 
+/**
 socket.on('successful-project', content => {
     // clear the message after success send
     app.addingProject = ''
     app.projects.push(content)
     console.log(content)
 })
+*/
 
 socket.on('successful-task', content => {
     // clear the message after success send
