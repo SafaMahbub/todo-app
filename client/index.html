@@ -26,7 +26,7 @@
 		</div>
 
 		<!-- Projects -->
-		<div v-show="!projectSelected">
+		<div v-if="!currentProject">
 			<div class="container">
 				<!-- Add a Project -->
 				<div class="form-inline">
@@ -50,7 +50,7 @@
 							<p v-bind="project">{{project.name}}</p>
 						</td>
 						<td>
-							<button type="submit" v-on:click="getProjectInfo(project)">Select Project</button>
+							<button v-on:click="viewProject(project.id)">Select Project</button>
 						</td>
 					</tr>
 				</table>
@@ -60,17 +60,17 @@
 
 
 		<!-- Tasks -->
-		<div v-show="projectSelected">
+		<div v-if="currentProject">
 			<!-- Add a Task -->
 			<div class="container">
-				<form class="form-inline">
+				<div class="form-inline">
 					<div class="form-group">
 					<label>Tasks</label>
 					<input v-model="addingTask" type="text" class="form-control" placeholder="To Do">
 					<!-- <p>{{addingTask}}</p> -->
 					</div>
-				<button v-on:click="addTask()" type="submit" class="btn btn-default">Add</button>
-				</form>
+				<button v-on:click="addTask()" class="btn btn-default">Add</button>
+				</div>
 			</div>
 
 			<br>
@@ -94,7 +94,7 @@
 			<div class="container">
 				<button  v-on:click="removeAll" class="btn btn-danger pull-right">Remove All</button>
 				&nbsp;&nbsp;&nbsp;
-				<button type="submit" v-on:click="backToHome()" class="btn btn-success pull-right">Back to Home</button>
+				<button v-on:click="backToHome()" class="btn btn-success pull-right">Back to Home</button>
 			</div>
 		</div>
 
@@ -102,7 +102,7 @@
 	</div>
 	<!-- <script type="text/javascript" src="https://unpkg.com/vue@2.5.15/dist/vue.min.js"></script> -->
 	<script type="text/javascript" src="https://unpkg.com/vue"></script>
-	<script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<!-- <script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script> -->
 	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
 	<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
 	<script type="text/javascript" src="https://unpkg.com/socket.io-client@2.1.0/dist/socket.io.js"></script>

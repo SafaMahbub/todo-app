@@ -1,85 +1,77 @@
-module.exports = (server, projects) => {
+module.exports = (server, data) => {
     const
         io = require('socket.io')(server),
         moment = require('moment')
 
     let sockets = []
 
+    /** Sends an updated project list to all the clients. */
+    const sendProjectsUpdated = () => {
+        io.emit('refresh-projects', data.getAllProjectNames())
+    }
+
+    /** Sends an update to only the clients who are viewing the particular project. */
+    const sendProjectUpdate = (message, projectId, content) => {
+        sockets
+            .filter(s => s.projectId == projectId)
+            .forEach(s => s.socket.emit(message, content))
+    }
+
     io.on('connection', socket => {
 
-        sockets.push(socket);
+        sockets.push({
+            socket: socket,
+            projectId: null // Which project the client is currently viewing.
+        });
 
-        socket.emit('refresh-projects', projects)
+        socket.emit('refresh-projects', data.getAllProjectNames())
 
-        // socket.on('add-project', project => {
-        //     io.emit('successful-project', content)
-        // })
-
-        socket.on('add-task', task => {
-            const content = {
-                projectName: task.projectName,
-                status: false,
-                value: task.value
-            }
-
-            for (let i = 0; i < projects.length; i++) {
-                if(projects[i].name.toLowerCase().trim() === task.projectName.toLowerCase().trim()) {
-                    projects[i].list.push({ status: false, value: task.value})
-                    break
-                }
-            }
-
-            io.emit('successful-task', content)
+        socket.on('add-project', projectName => {
+            const project = data.addProject(projectName)
+            io.emit('successful-project', {
+                id: project.id,
+                name: project.name
+            })
+            socket.send('successful-project')
         })
 
-        socket.on('toggle', data => {
-            const content = {
-                name: data.currentProject.name,
-                status: data.changingTask.status ? false : true,
-                value : data.changingTask.value
-            }
-
-            for (let i = 0; i < projects.length; i++) {
-                if(projects[i].name.toLowerCase().trim() === content.name.toLowerCase().trim()) {
-                    for(let j = 0; j < projects[i].list.length; j++) {
-                        if (projects[i].list[j].value.toLowerCase().trim() === content.value.toLowerCase().trim()) {
-                            projects[i].list[j].status = content.status
-                        }
-                    }
-                }
-            }
-
-            io.emit('successful-toggle', content)
-
+        socket.on('view-project', projectId => {
+            sockets.find(s => s.socket == socket).projectId = projectId;
+            socket.emit('successful-view-project', data.getProject(projectId))
         })
 
-        socket.on('remove-all', currectProject => {
-            const content = {
-                name: currectProject.name,
-                list: []
-            }
+        socket.on('return-home', () => {
+            sockets.find(s => s.socket == socket).projectId = null;
+            socket.emit('successful-return-home')
+        })
 
-            for (let i = 0; i < projects.length; i++) {
-                if(projects[i].name.toLowerCase().trim() === content.name.toLowerCase().trim()) {
-                    projects[i].list = []
-                    break
-                }
-            }
+        socket.on('add-task', content => {
+            const task = data.addTask(content.projectId, content.value)
+            sendProjectUpdate('successful-task', content.projectId, {
+                projectId: content.projectId,
+                task: task
+            })
+            socket.send('successful-task')
+        })
 
-            io.emit('successful-remove-all', content)
+        socket.on('toggle', content => {
+            const task = data.toggleTask(content.projectId, content.taskId)
+            sendProjectUpdate('successful-toggle', content.projectId, {
+                projectId: content.projectId,
+                task: task
+            })
+        })
 
+        socket.on('remove-all', projectId => {
+            const task = data.removeAll(projectId)
+            socket.emit('successful-remove-all', task)
+            sendProjectUpdate('successful-remove-all', projectId, data.getProject(projectId))
         })
 
         socket.on('disconnect', () => {
-            sockets = sockets.filter(s => s != socket);
+            sockets = sockets.filter(s => s.socket != socket)
         })
 
     })
-
-    return {
-        sendUpdated: () => {
-            sockets.forEach(s => s.emit('refresh-projects', projects))
-        }
-    }
 
 }

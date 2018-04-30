@@ -22,7 +22,7 @@ const app = new Vue({
     el: '#todo-app',
     data: {
         loggedIn: false,
-        projectSelected: false,
+        //projectSelected: false,
         userName: '',
         user: {},
         users: [],
@@ -30,51 +30,36 @@ const app = new Vue({
         projects: [],//[{name: 'Test Project', list: [{status:false, value: "Task 1"}, {status:false, value: "Task 2"}, {status:false, value: "Task 3"} ] }, {name: 'Test Project 2', list: [{status:false, value: "Task 4"}] }],
         addingProject: '',
         addingTask: '',
-        currentProject: {}, //{name: 'Test Project', list: [{status:false, value: "Hello"}] },
+        currentProject: null,
         error: false
     },
     methods: {
         addProject: function() {
             if(!this.addingProject) return
-            axios.post('/add-project', {name: this.addingProject, list: [] })
+            socket.emit('add-project', this.addingProject)
         },
 
         addTask: function() {
             if(!this.addingTask) return
-            socket.emit('add-task', {projectName: this.currentProject.name, value: this.addingTask })
+            socket.emit('add-task', {projectId: this.currentProject.id, value: this.addingTask})
         },
 
-        getProjectInfo: function(project) {
-
-            let viewModel = this
-
-            let match = false
-
-            for (let i = 0; i < viewModel.projects.length; i++) {
-                if (viewModel.projects[i].name.toLowerCase().trim() == project.name.toLowerCase().trim()) {
-                    viewModel.currentProject = viewModel.projects[i]
-                    match = true
-                    break
-                }
-            }
-
-            if(match) viewModel.projectSelected = true
-
+        viewProject: function(projectId) {
+            socket.emit('view-project', projectId)
         },
 
         backToHome: function() {
-            let viewModel = this
-            viewModel.projectSelected = false
+            socket.emit('return-home')
         },
 
         toggle: function(task) {
             if(!this.currentProject) return
-            socket.emit('toggle', {currentProject: this.currentProject, changingTask: task})
+            socket.emit('toggle', {projectId: this.currentProject.id, taskId: task.id})
         },
 
-        removeAll: function(){
+        removeAll: function() {
             if(!this.currentProject) return
-            socket.emit('remove-all', this.currentProject)
+            socket.emit('remove-all', this.currentProject.id)
         }
 
     },
@@ -87,54 +72,49 @@ socket.on('refresh-projects', projects => {
     app.projects = projects
 })
 
-/**
-socket.on('successful-project', content => {
-    // clear the message after success send
-    app.addingProject = ''
-    app.projects.push(content)
-    console.log(content)
+// Only received by the client who viewed the project.
+socket.on('successful-view-project', project => {
+    app.currentProject = project
 })
-*/
+
+// Only received by the client who returned home.
+socket.on('successful-return-home', () => {
+    app.currentProject = null
+})
+
+socket.on('successful-project', content => {
+    app.projects.push(content)
+})
 
 socket.on('successful-task', content => {
-    // clear the message after success send
-    app.addingTask = ''
-    app.projectSelected = true
-    app.currentProject = content.projectName
-
-    for (let i = 0; i < app.projects.length; i++) {
-        if(app.projects[i].name.toLowerCase().trim() === content.projectName.toLowerCase().trim()) {
-            app.projects[i].list.push({status: content.status, value: content.value})
-            break
-        }
+    if (app.currentProject.id == content.projectId) {
+        app.currentProject.list.push(content.task)
     }
 })
 
 socket.on('successful-toggle', content => {
-
-    for (let i = 0; i < app.projects.length; i++) {
-        if(app.projects[i].name.toLowerCase().trim() === content.name.toLowerCase().trim()) {
-            for(let j = 0; j < app.projects[i].list.length; j++) {
-                if (app.projects[i].list[j].value.toLowerCase().trim() === content.value.toLowerCase().trim()) {
-                    app.projects[i].list[j].status = content.status
-                    break
-                }
-            }
+    if (app.currentProject.id == content.projectId) {
+        const task = app.currentProject.list.find(t => t.id == content.task.id)
+        if (task) {
+            task.status = content.task.status
         }
     }
-
 })
 
 socket.on('successful-remove-all', content => {
-    app.addingTask = ''
-    app.projectSelected = true
-    app.currentProject = content.name
+    app.currentProject = content.project
+})
 
-    for (let i = 0; i < app.projects.length; i++) {
-        if(app.projects[i].name.toLowerCase().trim() === content.name.toLowerCase().trim()) {
-            app.projects[i].list = []
-            break
-        }
+
+// Messages without data.
+// These are only received by the client who adds the task or project.
+socket.on('message', (message) => {
+    if (message == 'successful-project') {
+        // clear the message after success send 
+        app.addingProject = ''
     }
-
+    else if (message == 'successful-task') {
+        // clear the message after success send 
+        app.addingTask = ''
+    }
 })
