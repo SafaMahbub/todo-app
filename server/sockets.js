@@ -37,6 +37,23 @@ module.exports = (server) => {
             io.emit('successful-task', content)
         })
 
+        socket.on('remove-all', currectProject => {
+            const content = {
+                name: currectProject.name,
+                list: []
+            }
+
+            for (let i = 0; i < projects.length; i++) {
+                if(projects[i].name.toLowerCase().trim() === content.name.toLowerCase().trim()) {
+                    projects[i].list = []
+                    break
+                }
+            }
+
+            io.emit('successful-remove-all', content)
+
+        })
+
         // socket.on('disconnect', () => {
         //     // logout the user
         //     db.logoutUser(socket.id)

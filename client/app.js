@@ -79,13 +79,17 @@ const app = new Vue({
         },
 
         removeAll: function(){
-            let viewModel = this
+            // let viewModel = this
 
-            for (let i = 0; i < viewModel.projects.length; i++) {
-                if(viewModel.projects[i].name == viewModel.currentProject.name) {
-                    viewModel.projects[i].list = []
-                }
-            }
+            // for (let i = 0; i < viewModel.projects.length; i++) {
+            //     if(viewModel.projects[i].name == viewModel.currentProject.name) {
+            //         viewModel.projects[i].list = []
+            //     }
+            // }
+
+            if(!this.currentProject) return
+            socket.emit('remove-all', this.currentProject)
+
         }
 
     },
@@ -124,6 +128,20 @@ socket.on('successful-task', content => {
     for (let i = 0; i < app.projects.length; i++) {
         if(app.projects[i].name.toLowerCase().trim() === content.projectName.toLowerCase().trim()) {
             app.projects[i].list.push({status: content.status, value: content.value})
+            break
+        }
+    }
+
+})
+
+socket.on('successful-remove-all', content => {
+    app.addingTask = ''
+    app.projectSelected = true
+    app.currentProject = content.name
+
+    for (let i = 0; i < app.projects.length; i++) {
+        if(app.projects[i].name.toLowerCase().trim() === content.name.toLowerCase().trim()) {
+            app.projects[i].list = []
             break
         }
     }
