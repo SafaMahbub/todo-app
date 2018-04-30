@@ -9,7 +9,8 @@ const projectComponent = {
                                 <p v-bind="project">{{project.name}}</p>
                             </td>
                             <td>
-                            </td>
+							<button type="submit" v-on:click="getProjectInfo(project)">Select Project</button>
+						    </td>
                         </tr>
                     </table>
                 </div>`,
@@ -40,7 +41,7 @@ const app = new Vue({
 
         addTask: function() {
             if(!this.addingTask) return
-            socket.emit('add-task', {projectName: this.currentProject, task: {status:false, value: this.addingTask }})
+            socket.emit('add-task', {projectName: this.currentProject.name, value: this.addingTask })
         },
 
         getProjectInfo: function(project) {
@@ -103,15 +104,28 @@ socket.on('refresh-projects', projects => {
     app.projects = projects
 })
 
+// socket.on('refresh-task', projects => {
+//     app.projects = projects
+// })
+
 socket.on('successful-project', content => {
     // clear the message after success send
     app.addingProject = ''
     app.projects.push(content)
+    console.log(content)
 })
 
 socket.on('successful-task', content => {
     // clear the message after success send
     app.addingTask = ''
+    app.projectSelected = true
+    app.currentProject = content.projectName
 
-    app.projects[content.projectName].list.push(content.task)
+    for (let i = 0; i < app.projects.length; i++) {
+        if(app.projects[i].name.toLowerCase().trim() === content.projectName.toLowerCase().trim()) {
+            app.projects[i].list.push({status: content.status, value: content.value})
+            break
+        }
+    }
+
 })

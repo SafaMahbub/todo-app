@@ -20,15 +20,21 @@ module.exports = (server) => {
             io.emit('successful-project', content)
         })
 
-        socket.on('add-task', projectAndTask => {
+        socket.on('add-task', task => {
             const content = {
-                projectName: projectAndTask.projectName,
-                task: projectAndTask.task
+                projectName: task.projectName,
+                status: false,
+                value: task.value
             }
-            projects[projectAndTask.projectName].list.push(projectAndTask.task)
-            console.log(projects[projectAndTask.projectName])
 
-            // io.emit('successful-task', content)
+            for (let i = 0; i < projects.length; i++) {
+                if(projects[i].name.toLowerCase().trim() === task.projectName.toLowerCase().trim()) {
+                    projects[i].list.push({ status: false, value: task.value})
+                    break
+                }
+            }
+
+            io.emit('successful-task', content)
         })
 
         // socket.on('disconnect', () => {
