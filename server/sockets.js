@@ -37,6 +37,27 @@ module.exports = (server) => {
             io.emit('successful-task', content)
         })
 
+        socket.on('toggle', data => {
+            const content = {
+                name: data.currentProject.name,
+                status: data.changingTask.status ? false : true,
+                value : data.changingTask.value
+            }
+
+            for (let i = 0; i < projects.length; i++) {
+                if(projects[i].name.toLowerCase().trim() === content.name.toLowerCase().trim()) {
+                    for(let j = 0; j < projects[i].list.length; j++) {
+                        if (projects[i].list[j].value.toLowerCase().trim() === content.value.toLowerCase().trim()) {
+                            projects[i].list[j].status = content.status
+                        }
+                    }
+                }
+            }
+
+            io.emit('successful-toggle', content)
+
+        })
+
         socket.on('remove-all', currectProject => {
             const content = {
                 name: currectProject.name,

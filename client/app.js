@@ -68,28 +68,13 @@ const app = new Vue({
         },
 
         toggle: function(task) {
-            let viewModel = this
-
-            for (let i = 0; i < viewModel.currentProject.list.length; i++) {
-                if (viewModel.currentProject.list[i].value.toLowerCase().trim() == task.value.toLowerCase().trim()) {
-                    if (viewModel.currentProject.list[i].status) viewModel.currentProject.list[i].status = false
-                    else viewModel.currentProject.list[i].status = true
-                }
-            }
+            if(!this.currentProject) return
+            socket.emit('toggle', {currentProject: this.currentProject, changingTask: task})
         },
 
         removeAll: function(){
-            // let viewModel = this
-
-            // for (let i = 0; i < viewModel.projects.length; i++) {
-            //     if(viewModel.projects[i].name == viewModel.currentProject.name) {
-            //         viewModel.projects[i].list = []
-            //     }
-            // }
-
             if(!this.currentProject) return
             socket.emit('remove-all', this.currentProject)
-
         }
 
     },
@@ -98,19 +83,9 @@ const app = new Vue({
     }
 })
 
-// socket.on('add-project', content => {
-//     // clear the message after success send
-//     app.addingProject = ''
-//     app.projects.push(content)
-// })
-
 socket.on('refresh-projects', projects => {
     app.projects = projects
 })
-
-// socket.on('refresh-task', projects => {
-//     app.projects = projects
-// })
 
 socket.on('successful-project', content => {
     // clear the message after success send
@@ -129,6 +104,20 @@ socket.on('successful-task', content => {
         if(app.projects[i].name.toLowerCase().trim() === content.projectName.toLowerCase().trim()) {
             app.projects[i].list.push({status: content.status, value: content.value})
             break
+        }
+    }
+})
+
+socket.on('successful-toggle', content => {
+
+    for (let i = 0; i < app.projects.length; i++) {
+        if(app.projects[i].name.toLowerCase().trim() === content.name.toLowerCase().trim()) {
+            for(let j = 0; j < app.projects[i].list.length; j++) {
+                if (app.projects[i].list[j].value.toLowerCase().trim() === content.value.toLowerCase().trim()) {
+                    app.projects[i].list[j].status = content.status
+                    break
+                }
+            }
         }
     }
 
