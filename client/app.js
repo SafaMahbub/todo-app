@@ -102,7 +102,7 @@ socket.on('successful-toggle', content => {
 })
 
 socket.on('successful-remove-all', content => {
-    app.currentProject = content.project
+    app.currentProject = content
 })
 
 
