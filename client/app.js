@@ -1,21 +1,33 @@
 // project Component
 const projectComponent = {
     template: ` 
-                <div class="container">
-                    <table class="table table-hover">
-                        <th>Projects</th>
-                        <tr class="active" v-for="project in projects">
-                            <td>
-                                <p v-bind="project">{{project.name}}</p>
-                            </td>
-                            <td>
-							<button type="submit" v-on:click="getProjectInfo(project)">Select Project</button>
-						    </td>
-                        </tr>
-                    </table>
-                </div>`,
-    props: ['projects']
+    <div class="container">
+				<table class="table table-hover">                 
+					<th>Projects</th>                              
+					<tr class="active" v-for="project in projects"> 
+						<td>                                            
+							<p>{{project.name}}</p>                
+						</td>
+						<td>                                       
+							<button v-on:click="$parent.viewProject(project.id)">Select Project</button>           
+						</td>
+					</tr>
+				</table>
+			</div>`,
+    props: ['projects'] //takes in projects as a prop
 }
+
+const titleComponent = {
+    template: `
+    
+        <div class="jumbotron">
+        <center>
+            <h1>To Do List</h1>      
+            <p>Add thing that you need to to</p>
+        </center>
+    </div>`
+}
+
 
 const socket = io()
 const app = new Vue({
@@ -44,7 +56,7 @@ const app = new Vue({
             socket.emit('add-task', {projectId: this.currentProject.id, value: this.addingTask})
         },
 
-        viewProject: function(projectId) {
+        viewProject: function(projectId) {   // this function takes in projectId and call the socekt 'view-project' 
             socket.emit('view-project', projectId)
         },
 
@@ -64,7 +76,8 @@ const app = new Vue({
 
     },
     components: {
-        'project-component': projectComponent
+        'project-component': projectComponent,
+        'title-component': titleComponent
     }
 })
 
