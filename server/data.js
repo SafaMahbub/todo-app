@@ -4,7 +4,7 @@ const projects = [
         id: 1,
         name: 'Test Project',
         nextItemId: 4,
-        list: [
+        tasks: [
             {
                 id: 1,
                 status:false,
@@ -26,7 +26,7 @@ const projects = [
         id: 2,
         name: 'Test Project 2',
         nextItemId: 2,
-        list: [
+        tasks: [
             {
                 id: 1,
                 status:false,
@@ -56,7 +56,7 @@ module.exports.addProject = (projectName) => {
         id: nextProjectId++,
         name: projectName,
         nextItemId: 1,
-        list: []
+        tasks: []
     }
     projects.push(project)
     return project
@@ -70,7 +70,7 @@ module.exports.addTask = (projectId, taskName) => {
             status: false,
             value: taskName
         }
-        project.list.push(task)
+        project.tasks.push(task)
         return task
     }
 }
@@ -78,7 +78,7 @@ module.exports.addTask = (projectId, taskName) => {
 module.exports.toggleTask = (projectId, taskId) => {
     const project = projects.find(p => p.id == projectId)
     if (project) {
-        const task = project.list.find(t => t.id == taskId)
+        const task = project.tasks.find(t => t.id == taskId)
         if (task) {
             task.status = !task.status 
             return task
@@ -89,7 +89,7 @@ module.exports.toggleTask = (projectId, taskId) => {
 module.exports.removeCompleted = (projectId) => {
     const project = projects.find(p => p.id == projectId)
     if (project) {
-        project.list = project.list.filter(t => !t.status)
+        project.tasks = project.tasks.filter(t => !t.status)
         return project
     }
 }

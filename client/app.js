@@ -121,13 +121,13 @@ socket.on('successful-project', content => {
 
 socket.on('successful-task', content => {
     if (app.currentProject.id == content.projectId) {
-        app.currentProject.list.push(content.task)
+        app.currentProject.tasks.push(content.task)
     }
 })
 
 socket.on('successful-toggle', content => {
     if (app.currentProject.id == content.projectId) {
-        const task = app.currentProject.list.find(t => t.id == content.task.id)
+        const task = app.currentProject.tasks.find(t => t.id == content.task.id)
         if (task) {
             task.status = content.task.status
         }
