@@ -59,12 +59,11 @@ const app = new Vue({
     el: '#todo-app',
     data: {
         loggedIn: false,
-        //projectSelected: false,
         userName: '',
         user: {},
         users: [],
         project: {},
-        projects: [],//[{name: 'Test Project', list: [{status:false, value: "Task 1"}, {status:false, value: "Task 2"}, {status:false, value: "Task 3"} ] }, {name: 'Test Project 2', list: [{status:false, value: "Task 4"}] }],
+        projects: [],
         addingProject: '',
         addingTask: '',
         currentProject: null,
@@ -81,7 +80,8 @@ const app = new Vue({
             socket.emit('add-task', {projectId: this.currentProject.id, value: this.addingTask})
         },
 
-        viewProject: function(projectId) {   // this function takes in projectId and call the socekt 'view-project' 
+        // this function takes in projectId and call the socekt 'view-project' 
+        viewProject: function(projectId) {   
             socket.emit('view-project', projectId)
         },
 

@@ -38,11 +38,6 @@ const projects = [
 
 let nextProjectId = 3
 
-// Is this needed?
-module.exports.getAllProjects = () => {
-    return projects
-}
-
 module.exports.getAllProjectNames = () => {
     return projects.map(p => {
         return {
@@ -85,7 +80,7 @@ module.exports.toggleTask = (projectId, taskId) => {
     if (project) {
         const task = project.list.find(t => t.id == taskId)
         if (task) {
-            task.status = !task.status // Should we set a specific status instead of toggling (?)
+            task.status = !task.status 
             return task
         }
     }

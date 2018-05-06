@@ -12,7 +12,6 @@
 			display: none;
 		}
 	</style>
-
 </head>
 
 <body>
@@ -24,6 +23,7 @@
 		<!-- Projects -->
 		<div v-if="!currentProject">
 			<div class="container">
+
 				<!-- Add a Project -->
 				<div class="form-inline">
 					<div class="form-group">
@@ -43,13 +43,13 @@
 
 		<!-- Tasks -->
 		<div v-if="currentProject">
+
 			<!-- Add a Task -->
 			<div class="container">
 				<div class="form-inline">
 					<div class="form-group">
 						<label>Tasks</label>
 						<input v-model="addingTask" type="text" class="form-control" placeholder="To Do">
-						<!-- <p>{{addingTask}}</p> -->
 					</div>
 					<button v-on:click="addTask()" class="btn btn-default">Add</button>
 				</div>
@@ -68,13 +68,8 @@
 			</div>
 		</div>
 
-
 	</div>
-	<!-- <script type="text/javascript" src="https://unpkg.com/vue@2.5.15/dist/vue.min.js"></script> -->
 	<script type="text/javascript" src="https://unpkg.com/vue"></script>
-	<!-- <script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script> -->
-	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
-	<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
 	<script type="text/javascript" src="https://unpkg.com/socket.io-client@2.1.0/dist/socket.io.js"></script>
 	<script type="text/javascript" src="app.js"></script>
 </body>
