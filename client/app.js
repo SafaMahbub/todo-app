@@ -58,12 +58,10 @@ const socket = io()
 const app = new Vue({
     el: '#todo-app',
     data: {
-        project: {},
         projects: [],
         addingProject: '',
         addingTask: '',
-        currentProject: null,
-        error: false
+        currentProject: null
     },
     methods: {
         addProject: function() {
