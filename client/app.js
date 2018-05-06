@@ -1,6 +1,6 @@
 // TODO This should be projects component
 // project Component
-const projectComponent = {
+const projectsComponent = {
     template: ` 
     <div class="container">
         <table class="table table-hover">
@@ -45,8 +45,8 @@ const tasksComponent = {
                 </tr>
                 <tr v-for="task in tasks" class="active">
                     <td>
-                        <button v-show="task.status" v-on:click="$emit('toggle', task)" class="btn btn-info">Done</button>
-                        <button v-show="!task.status" v-on:click="$emit('toggle', task)" class="btn btn-danger">Not Done</button>
+                        <button v-show="task.status" v-on:click="$parent.toggle(task)" class="btn btn-info">Done</button>
+                        <button v-show="!task.status" v-on:click="$parent.toggle(task)" class="btn btn-danger">Not Done</button>
                     </td>
                     <td>{{task.value}}</td>
                 </tr>
@@ -103,7 +103,7 @@ const app = new Vue({
 
     },
     components: {
-        'project-component': projectComponent,
+        'projects-component': projectsComponent,
         'tasks-component': tasksComponent,
         'title-component': titleComponent
     }

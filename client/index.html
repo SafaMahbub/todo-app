@@ -2,23 +2,23 @@
 <html lang="en">
 
 <head>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>To Do List</title>
-  <style>
-	[v-cloak] {
-	   display: none;
-	}
- </style>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>To Do List</title>
+	<style>
+		[v-cloak] {
+			display: none;
+		}
+	</style>
 
 </head>
 
 <body>
-<div id="todo-app" v-cloak>
+	<div id="todo-app" v-cloak>
 
-	<!-- title component-->
+		<!-- title component-->
 		<title-component id='titleComponent'></title-component>
 
 		<!-- Projects -->
@@ -32,28 +32,11 @@
 						<button class="btn btn-default" v-on:click="addProject">Create</button>
 					</div>
 				</div>
-			</div>			  
+			</div>
 
 			<br>
 
-			<!-- List all Projects -->
-			<!-- <div class="container">
-				<table class="table table-hover">
-					<th>Projects</th>
-					<tr class="active" v-for="project in projects">
-						<td>
-							<p v-bind="project">{{project.name}}</p>
-						</td>
-						<td>
-							<button v-on:click="viewProject(project.id)">Select Project</button>
-						</td>
-					</tr>
-				</table>
-			</div> -->
-
-			<project-component v-bind:projects="projects" ></project-component>
-
-
+			<projects-component v-bind:projects="projects"></projects-component>
 
 		</div>
 
@@ -67,7 +50,7 @@
 						<label>Tasks</label>
 						<input v-model="addingTask" type="text" class="form-control" placeholder="To Do">
 						<!-- <p>{{addingTask}}</p> -->
-						</div>
+					</div>
 					<button v-on:click="addTask()" class="btn btn-default">Add</button>
 				</div>
 			</div>
@@ -75,11 +58,11 @@
 			<br>
 
 			<!-- List All Tasks -->
-			<tasks-component v-bind:tasks="currentProject.list" v-on:toggle="toggle($event)"></tasks-component>
+			<tasks-component v-bind:tasks="currentProject.list"></tasks-component>
 
 			<!-- Remove all Tasks -->
 			<div class="container">
-				<button  v-on:click="removeAll" class="btn btn-danger pull-right">Remove All</button>
+				<button v-on:click="removeAll" class="btn btn-danger pull-right">Remove All</button>
 				&nbsp;&nbsp;&nbsp;
 				<button v-on:click="backToHome()" class="btn btn-success pull-right">Back to Home</button>
 			</div>
@@ -93,7 +76,7 @@
 	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
 	<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
 	<script type="text/javascript" src="https://unpkg.com/socket.io-client@2.1.0/dist/socket.io.js"></script>
-   	<script type="text/javascript" src="app.js"></script>
+	<script type="text/javascript" src="app.js"></script>
 </body>
 
 </html>
