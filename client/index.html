@@ -28,7 +28,7 @@
 				<div class="form-inline">
 					<div class="form-group">
 						<label>Project</label>
-						<input type="text" v-model="addingProject" class="form-control" placeholder="Project Name">
+						<input type="text" v-model="addingProject" class="form-control" @keyup.enter="addProject" placeholder="Project Name">
 						<button class="btn btn-default" v-on:click="addProject">Create</button>
 					</div>
 				</div>
@@ -49,7 +49,7 @@
 				<div class="form-inline">
 					<div class="form-group">
 						<label>Tasks</label>
-						<input v-model="addingTask" type="text" class="form-control" placeholder="To Do">
+						<input v-model="addingTask" type="text" class="form-control" @keyup.enter="addTask" placeholder="To Do">
 					</div>
 					<button v-on:click="addTask()" class="btn btn-default">Add</button>
 				</div>

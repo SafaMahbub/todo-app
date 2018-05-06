@@ -8,7 +8,6 @@ const
 const sockets = require('./sockets')(server, data)
 
 app.use(express.static(path.join(__dirname, '..', '/client')))
-app.use(express.json());
 
 const port = 8080;
 server.listen(port)
