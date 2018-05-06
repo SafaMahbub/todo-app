@@ -31,30 +31,17 @@
 				<!-- Add a Project -->
 				<div class="form-inline">
 					<div class="form-group">
-					<label>Project</label>
-					<input type="text" v-model="addingProject" class="form-control" placeholder="Project Name">
-					<button class="btn btn-default" v-on:click="addProject">Create</button>
+						<label>Project</label>
+						<input type="text" v-model="addingProject" class="form-control" placeholder="Project Name">
+						<button class="btn btn-default" v-on:click="addProject">Create</button>
 					</div>
 				</div>
 			</div>
 
 			<br>
 
-			<!-- <project-component v-bind:projects="projects" ></project-component> -->
 			<!-- List all Projects -->
-			<div class="container">
-				<table class="table table-hover">
-					<th>Projects</th>
-					<tr class="active" v-for="project in projects">
-						<td>
-							<p v-bind="project">{{project.name}}</p>
-						</td>
-						<td>
-							<button v-on:click="viewProject(project.id)">Select Project</button>
-						</td>
-					</tr>
-				</table>
-			</div>
+			<project-component v-bind:projects="projects"></project-component>
 
 		</div>
 
@@ -65,30 +52,18 @@
 			<div class="container">
 				<div class="form-inline">
 					<div class="form-group">
-					<label>Tasks</label>
-					<input v-model="addingTask" type="text" class="form-control" placeholder="To Do">
-					<!-- <p>{{addingTask}}</p> -->
-					</div>
-				<button v-on:click="addTask()" class="btn btn-default">Add</button>
+						<label>Tasks</label>
+						<input v-model="addingTask" type="text" class="form-control" placeholder="To Do">
+						<!-- <p>{{addingTask}}</p> -->
+						</div>
+					<button v-on:click="addTask()" class="btn btn-default">Add</button>
 				</div>
 			</div>
 
 			<br>
 
 			<!-- List All Tasks -->
-			<div class="container">
-				<table class="table table-hover">
-					<th style="width:200px">Status</th>
-					<th>ToDo</th>
-					<tr v-for="task in currentProject.list" class="active">
-						<td>
-							<button v-show="task.status" v-on:click="toggle(task)" class="btn btn-info">Done</button>
-							<button v-show="!task.status" v-on:click="toggle(task)" class="btn btn-danger">Not Done</button>
-						</td>
-						<td>{{task.value}}</td>
-					</tr>
-				</table>
-			</div>
+			<tasks-component v-bind:tasks="currentProject.list" v-on:toggle="toggle($event)"></tasks-component>
 
 			<!-- Remove all Tasks -->
 			<div class="container">
