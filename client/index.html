@@ -16,14 +16,10 @@
 </head>
 
 <body>
+<div id="todo-app" v-cloak>
 
-	<div id="todo-app" v-cloak>
-		<div class="jumbotron">
-			<center>
-				<h1>To Do List</h1>      
-				<p>Add thing that you need to to</p>
-			</center>
-		</div>
+	<!-- title component-->
+		<title-component id='titleComponent'></title-component>
 
 		<!-- Projects -->
 		<div v-if="!currentProject">
@@ -36,12 +32,28 @@
 						<button class="btn btn-default" v-on:click="addProject">Create</button>
 					</div>
 				</div>
-			</div>
+			</div>			  
 
 			<br>
 
 			<!-- List all Projects -->
-			<project-component v-bind:projects="projects"></project-component>
+			<!-- <div class="container">
+				<table class="table table-hover">
+					<th>Projects</th>
+					<tr class="active" v-for="project in projects">
+						<td>
+							<p v-bind="project">{{project.name}}</p>
+						</td>
+						<td>
+							<button v-on:click="viewProject(project.id)">Select Project</button>
+						</td>
+					</tr>
+				</table>
+			</div> -->
+
+			<project-component v-bind:projects="projects" ></project-component>
+
+
 
 		</div>
 

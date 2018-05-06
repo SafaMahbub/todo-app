@@ -5,53 +5,34 @@ const socket = io()
 const projectComponent = {
     template: ` 
     <div class="container">
-        <table class="table table-hover">
-            <tbody>
-                <tr>
-                    <th>Projects</th>
-                </tr>
-                <tr class="active" v-for="project in projects">
-                    <td>
-                        <p v-bind="project">{{project.name}}</p>
-                    </td>
-                    <td>
-                        <button v-on:click="viewProject(project.id)">Select Project</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>`,
-    props: ['projects'],
-    methods: {
-        viewProject: function(projectId) {
-            socket.emit('view-project', projectId)
-        }
-    }
+				<table class="table table-hover">                 
+					<th>Projects</th>                              
+					<tr class="active" v-for="project in projects"> 
+						<td>                                            
+							<p>{{project.name}}</p>                
+						</td>
+						<td>                                       
+							<button v-on:click="$parent.viewProject(project.id)">Select Project</button>           
+						</td>
+					</tr>
+				</table>
+			</div>`,
+    props: ['projects'] //takes in projects as a prop
 }
 
-// Task Component displaying an individual task
-const tasksComponent = {
-    template: ` 
-    <div class="container">
-        <table class="table table-hover">
-            <tbody>
-                <tr>
-                    <th style="width:200px">Status</th>
-                    <th>ToDo</th>
-                </tr>
-                <tr v-for="task in tasks" class="active">
-                    <td>
-                        <button v-show="task.status" v-on:click="$emit('toggle', task)" class="btn btn-info">Done</button>
-                        <button v-show="!task.status" v-on:click="$emit('toggle', task)" class="btn btn-danger">Not Done</button>
-                    </td>
-                    <td>{{task.value}}</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>`,
-    props: ['tasks']
+const titleComponent = {
+    template: `
+    
+        <div class="jumbotron">
+        <center>
+            <h1>To Do List</h1>      
+            <p>Add thing that you need to to</p>
+        </center>
+    </div>`
 }
 
+
+const socket = io()
 const app = new Vue({
     el: '#todo-app',
     data: {
@@ -78,9 +59,9 @@ const app = new Vue({
             socket.emit('add-task', {projectId: this.currentProject.id, value: this.addingTask})
         },
 
-        // viewProject: function(projectId) {
-        //     socket.emit('view-project', projectId)
-        // },
+        viewProject: function(projectId) {   // this function takes in projectId and call the socekt 'view-project' 
+            socket.emit('view-project', projectId)
+        },
 
         backToHome: function() {
             socket.emit('return-home')
@@ -100,6 +81,7 @@ const app = new Vue({
     components: {
         'project-component': projectComponent,
         'tasks-component': tasksComponent
+        'title-component': titleComponent
     }
 })
 
