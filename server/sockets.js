@@ -63,7 +63,7 @@ module.exports = (server, data) => {
         })
 
         socket.on('remove-all', projectId => {
-            const task = data.removeAll(projectId)
+            const task = data.removeCompleted(projectId)
             socket.emit('successful-remove-all', task)
             sendProjectUpdate('successful-remove-all', projectId, data.getProject(projectId))
         })

@@ -90,7 +90,7 @@ const app = new Vue({
             socket.emit('toggle', {projectId: this.currentProject.id, taskId: task.id})
         },
 
-        removeAll: function() {
+        removeCompleted: function() {
             if(!this.currentProject) return
             socket.emit('remove-all', this.currentProject.id)
         }

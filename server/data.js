@@ -86,7 +86,7 @@ module.exports.toggleTask = (projectId, taskId) => {
     }
 }
 
-module.exports.removeAll = (projectId) => {
+module.exports.removeCompleted = (projectId) => {
     const project = projects.find(p => p.id == projectId)
     if (project) {
         project.list = project.list.filter(t => !t.status)
