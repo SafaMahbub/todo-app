@@ -58,10 +58,6 @@ const socket = io()
 const app = new Vue({
     el: '#todo-app',
     data: {
-        loggedIn: false,
-        userName: '',
-        user: {},
-        users: [],
         project: {},
         projects: [],
         addingProject: '',
