@@ -3,17 +3,15 @@
 const projectsComponent = {
     template: ` 
     <div class="container">
+        <h3 style="text-align:center">Projects</h3>
         <table class="table table-hover">
             <tbody>
-                <tr>
-                    <th>Projects</th>        
-                </tr>                      
                 <tr class="active" v-for="project in projects"> 
                     <td>                                            
                         <p>{{project.name}}</p>                
                     </td>
                     <td>                                       
-                        <button v-on:click="$parent.viewProject(project.id)">Select Project</button>           
+                        <button class="btn btn-info" v-on:click="$parent.viewProject(project.id)">Select Project</button>           
                     </td>
                 </tr>
             </tbody>
@@ -28,7 +26,7 @@ const titleComponent = {
         <div class="jumbotron">
         <center>
             <h1>To Do List</h1>      
-            <p>Add thing that you need to to</p>
+            <p>Add things that you need to do</p>
         </center>
     </div>`
 }
