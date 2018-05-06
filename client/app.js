@@ -1,22 +1,24 @@
-const socket = io()
-
 // TODO This should be projects component
 // project Component
 const projectComponent = {
     template: ` 
     <div class="container">
-				<table class="table table-hover">                 
-					<th>Projects</th>                              
-					<tr class="active" v-for="project in projects"> 
-						<td>                                            
-							<p>{{project.name}}</p>                
-						</td>
-						<td>                                       
-							<button v-on:click="$parent.viewProject(project.id)">Select Project</button>           
-						</td>
-					</tr>
-				</table>
-			</div>`,
+        <table class="table table-hover">
+            <tbody>
+                <tr>
+                    <th>Projects</th>        
+                </tr>                      
+                <tr class="active" v-for="project in projects"> 
+                    <td>                                            
+                        <p>{{project.name}}</p>                
+                    </td>
+                    <td>                                       
+                        <button v-on:click="$parent.viewProject(project.id)">Select Project</button>           
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>`,
     props: ['projects'] //takes in projects as a prop
 }
 
@@ -31,6 +33,28 @@ const titleComponent = {
     </div>`
 }
 
+// Task Component displaying an individual task
+const tasksComponent = {
+    template: ` 
+    <div class="container">
+        <table class="table table-hover">
+            <tbody>
+                <tr>
+                    <th style="width:200px">Status</th>
+                    <th>ToDo</th>
+                </tr>
+                <tr v-for="task in tasks" class="active">
+                    <td>
+                        <button v-show="task.status" v-on:click="$emit('toggle', task)" class="btn btn-info">Done</button>
+                        <button v-show="!task.status" v-on:click="$emit('toggle', task)" class="btn btn-danger">Not Done</button>
+                    </td>
+                    <td>{{task.value}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>`,
+    props: ['tasks']
+}
 
 const socket = io()
 const app = new Vue({
@@ -80,7 +104,7 @@ const app = new Vue({
     },
     components: {
         'project-component': projectComponent,
-        'tasks-component': tasksComponent
+        'tasks-component': tasksComponent,
         'title-component': titleComponent
     }
 })
